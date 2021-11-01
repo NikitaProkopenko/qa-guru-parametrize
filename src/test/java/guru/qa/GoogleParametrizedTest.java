@@ -25,7 +25,7 @@ public class GoogleParametrizedTest {
             "github",
             "gitlab"
     })
-    @ParameterizedTest(name = "Check Google input search value with query: {0}")
+    @ParameterizedTest(name = "Check Google input search value with search query: {0}")
     void checkGoogleSearchResult(String query) {
         open("https://www.google.com/");
         $(By.name("q")).setValue(query).pressEnter();
@@ -63,6 +63,9 @@ public class GoogleParametrizedTest {
                 ),
                 Arguments.of(
                     "Videos"
+                ),
+                Arguments.of(
+                    "News"
                 )
         );
     }
@@ -70,8 +73,8 @@ public class GoogleParametrizedTest {
     @ParameterizedTest(name = "Check Google search results on different tabs")
     void checkGoogleSearchResultOnDifferentTabsMethodSource(String tabName) {
         open("https://www.google.com/");
-        $(By.name("q")).setValue("github").pressEnter();
+        $(By.name("q")).setValue("gitlab").pressEnter();
         $$("#hdtb-msb .hdtb-mitem").find(Condition.text(tabName)).click();
-        $(By.name("q")).shouldHave(Condition.attribute("value", "github"));
+        $(By.name("q")).shouldHave(Condition.attribute("value", "gitlab"));
     }
 }
