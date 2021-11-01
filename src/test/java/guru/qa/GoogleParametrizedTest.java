@@ -6,13 +6,12 @@ import guru.qa.domain.MenuItem;
 import guru.qa.page.GoogleResultPage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import java.util.stream.Stream;
+
+import static com.codeborne.selenide.Selenide.*;
 
 public class GoogleParametrizedTest {
     private GoogleResultPage google = new GoogleResultPage();
@@ -51,6 +50,28 @@ public class GoogleParametrizedTest {
         open("https://www.google.com/");
         $(By.name("q")).setValue("github").pressEnter();
         google.switchToMenuItem(menuItem);
+        $(By.name("q")).shouldHave(Condition.attribute("value", "github"));
+    }
+
+    static Stream<Arguments> checkGoogleSearchResultOnDifferentTabsMethodSource() {
+        return Stream.of(
+                Arguments.of(
+                    "All"
+                ),
+                Arguments.of(
+                    "Images"
+                ),
+                Arguments.of(
+                    "Videos"
+                )
+        );
+    }
+    @MethodSource()
+    @ParameterizedTest(name = "Check Google search results on different tabs")
+    void checkGoogleSearchResultOnDifferentTabsMethodSource(String tabName) {
+        open("https://www.google.com/");
+        $(By.name("q")).setValue("github").pressEnter();
+        $$("#hdtb-msb .hdtb-mitem").find(Condition.text(tabName)).click();
         $(By.name("q")).shouldHave(Condition.attribute("value", "github"));
     }
 }
